@@ -1,4 +1,5 @@
 import * as ui from '../node_modules/@dcl/ui-utils/index'
+import utils from '../node_modules/decentraland-ecs-utils/index'
 /*
   IMPORTANT: The tsconfig.json has been configured to include "node_modules/cannon/build/cannon.js"
 */
@@ -7,17 +8,20 @@ import { Frisbee } from './frisbee'
 import { addPhysicsConstraints } from './physicsConstraints'
 import { FloatingTextUpdate } from './floatingText'
 import { alteredUserName, dataType, joinSocketsServer } from './wsConnection'
+import { TriggerBoxShape } from '../node_modules/decentraland-ecs-utils/triggers/triggerSystem'
 
 export let frisbee: Frisbee
 
-async function setUpScene() {
-  // Create base scene
-  const baseScene: Entity = new Entity()
-  baseScene.addComponent(new GLTFShape('models/baseScene.glb'))
-  baseScene.getComponent(GLTFShape).isPointerBlocker = false
-  baseScene.addComponent(new Transform())
-  engine.addEntity(baseScene)
+export let sceneStarted = false
 
+// Create base scene
+const baseScene: Entity = new Entity()
+baseScene.addComponent(new GLTFShape('models/baseScene.glb'))
+baseScene.getComponent(GLTFShape).isPointerBlocker = false
+baseScene.addComponent(new Transform())
+engine.addEntity(baseScene)
+
+async function setUpScene() {
   let socket = await joinSocketsServer()
 
   // Setup our CANNON world
@@ -104,8 +108,6 @@ async function setUpScene() {
   return
 }
 
-setUpScene()
-
 export async function setDisk(pos: Vector3, rot: Quaternion) {
   frisbee.getComponent(Transform).position.copyFrom(pos)
   frisbee.getComponent(Transform).rotation.copyFrom(rot)
@@ -125,3 +127,37 @@ engine.addSystem(new FloatingTextUpdate())
 
 let streakLabel = new ui.CornerLabel('Streak', -80, 30, Color4.Red())
 export let streakCounter = new ui.UICounter(0, -10, 30, Color4.Red())
+streakLabel.uiText.visible = false
+streakCounter.uiText.visible = false
+
+let uiArea = new Entity()
+uiArea.addComponent(
+  new Transform({
+    position: new Vector3(16, 0, 16),
+  })
+)
+engine.addEntity(uiArea)
+
+uiArea.addComponent(
+  new utils.TriggerComponent(
+    new TriggerBoxShape(new Vector3(32, 32, 32), Vector3.Zero()),
+    null,
+    null,
+    null,
+    null,
+    () => {
+      if (!sceneStarted) {
+        setUpScene()
+        sceneStarted = true
+      }
+
+      streakLabel.uiText.visible = true
+      streakCounter.uiText.visible = true
+    },
+    () => {
+      streakLabel.uiText.visible = false
+      streakCounter.uiText.visible = false
+    },
+    false
+  )
+)

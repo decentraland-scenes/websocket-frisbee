@@ -27,7 +27,8 @@ export async function joinSocketsServer() {
   log('about to get the user data')
   userData = await getUserData()
   alteredUserName = userData.displayName + Math.floor(Math.random() * 10000)
-  let realm = await getCurrentRealm() //{ displayName: 'pepito' } //
+
+  let realm = await getCurrentRealm() // { displayName: 'pepito' } //
 
   log(`You are in the realm: `, realm.displayName)
   // connect to websockets server
