@@ -10,8 +10,7 @@ const Z_OFFSET = 1
 
 const FIXED_TIME_STEPS = 1.0 / 60.0 // seconds
 const MAX_TIME_STEPS = 3
-//const RECALL_SPEED = 10
-const SHOOT_VELOCITY = 100
+const SHOOT_VELOCITY = 50
 
 const shootSound = new Sound(new AudioClip('sounds/shoot.mp3'))
 const recallSound = new Sound(new AudioClip('sounds/recall.mp3'))
@@ -29,7 +28,7 @@ export class Frisbee extends Entity {
   constructor(transform: Transform, world: CANNON.World, socket: WebSocket) {
     super()
     engine.addEntity(this)
-    this.addComponent(new GLTFShape('models/translocator.glb'))
+    this.addComponent(new GLTFShape('models/disc.glb'))
     this.addComponent(transform)
 
     this.world = world
@@ -58,7 +57,7 @@ export class Frisbee extends Entity {
     )
 
     this.body = new CANNON.Body({
-      mass: 3, // kg
+      mass: 1.25, // kg
       position: new CANNON.Vec3(
         transform.position.x,
         transform.position.y,

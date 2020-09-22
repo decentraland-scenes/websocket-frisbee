@@ -16,8 +16,8 @@ export let sceneStarted = false
 
 // Create base scene
 const baseScene: Entity = new Entity()
-baseScene.addComponent(new GLTFShape('models/baseScene.glb'))
-baseScene.getComponent(GLTFShape).isPointerBlocker = false
+baseScene.addComponent(new GLTFShape('models/hexBase.glb'))
+// baseScene.getComponent(GLTFShape).isPointerBlocker = false
 baseScene.addComponent(new Transform())
 engine.addEntity(baseScene)
 
@@ -28,9 +28,7 @@ async function setUpScene() {
   const world = new CANNON.World()
   world.quatNormalizeSkip = 0
   world.quatNormalizeFast = false
-  world.gravity.set(0, -9.82, 0) // m/s²
-
-  addPhysicsConstraints(world, 2, 2, true)
+  world.gravity.set(0, -9.82, 0) // m/s² 
 
   const groundMaterial = new CANNON.Material('groundMaterial')
   const groundContactMaterial = new CANNON.ContactMaterial(
@@ -39,6 +37,14 @@ async function setUpScene() {
     { friction: 0, restitution: 0.33 }
   )
   world.addContactMaterial(groundContactMaterial)
+
+  frisbee = new Frisbee(
+    new Transform({ position: new Vector3(8, 0.49, 8) }),
+    world,
+    socket
+  )
+
+  addPhysicsConstraints(world, frisbee.body.material, 2, 2, true)
 
   // Create a ground plane
   const planeShape = new CANNON.Plane()
@@ -50,12 +56,6 @@ async function setUpScene() {
   groundBody.quaternion.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), -Math.PI / 2) // Reorient ground plane to be in the y-axis
   groundBody.position.y = 0.17 // Thickness of ground base model
   world.addBody(groundBody)
-
-  frisbee = new Frisbee(
-    new Transform({ position: new Vector3(8, 0.49, 8) }),
-    world,
-    socket
-  )
 
   const translocatorPhysicsContactMaterial = new CANNON.ContactMaterial(
     groundMaterial,
