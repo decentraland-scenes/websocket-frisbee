@@ -28,7 +28,7 @@ async function setUpScene() {
   const world = new CANNON.World()
   world.quatNormalizeSkip = 0
   world.quatNormalizeFast = false
-  world.gravity.set(0, -9.82, 0) // m/s² 
+  world.gravity.set(0, -9.82, 0) // m/s²
 
   const groundMaterial = new CANNON.Material('groundMaterial')
   const groundContactMaterial = new CANNON.ContactMaterial(
@@ -86,7 +86,7 @@ async function setUpScene() {
     )
   })
 
-  const MAX_CATCH_DIST = 4
+  const MAX_CATCH_DIST = 3
 
   Input.instance.subscribe('BUTTON_DOWN', ActionButton.PRIMARY, false, (e) => {
     if (!frisbee.isFired || frisbee.holding || frisbee.otherHolding) {

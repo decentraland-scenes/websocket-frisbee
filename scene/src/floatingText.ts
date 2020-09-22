@@ -36,7 +36,6 @@ export function createFloatingText(
     })
   )
   text.addComponent(new FloatingText(speed))
-  engine.addEntity(text)
 
   let textShape = new TextShape(val)
   text.addComponent(textShape)
@@ -44,6 +43,7 @@ export function createFloatingText(
   textShape.fontSize = 5
   textShape.fontWeight = 'bold'
   textShape.color = color
+  engine.addEntity(text)
 }
 
 export class FloatingTextUpdate implements ISystem {
