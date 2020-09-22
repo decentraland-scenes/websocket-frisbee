@@ -2,7 +2,7 @@ import { Sound } from './sounds'
 import * as ui from '../node_modules/@dcl/ui-utils/index'
 import { createFloatingText } from './floatingText'
 import { alteredUserName, dataType } from './wsConnection'
-import { streakCounter } from './game'
+import { catchHint, streakCounter } from './game'
 
 const X_OFFSET = 0
 const Y_OFFSET = -0.5
@@ -26,7 +26,13 @@ export class Frisbee extends Entity {
   hitGround: boolean = false
   world: CANNON.World
   socket: WebSocket
-  constructor(transform: Transform, world: CANNON.World, socket: WebSocket) {
+  ground: CANNON.Body
+  constructor(
+    transform: Transform,
+    world: CANNON.World,
+    socket: WebSocket,
+    ground: CANNON.Body
+  ) {
     super()
     engine.addEntity(this)
     this.addComponent(new GLTFShape('models/disc.glb'))
@@ -34,6 +40,7 @@ export class Frisbee extends Entity {
 
     this.world = world
     this.socket = socket
+    this.ground = ground
 
     // Glow setup
     this.blueGlow.addComponent(new Transform())
@@ -76,8 +83,11 @@ export class Frisbee extends Entity {
     this.body.angularDamping = 0.4 // Round bodies will keep rotating even with friction so you need angularDamping
 
     this.body.addEventListener('collide', (e) => {
-      log('Frisbee Collided')
-      this.hitGround = true
+      if (e.body == this.ground) {
+        log('Frisbee Collided w ground')
+        this.hitGround = true
+        catchHint.uiText.visible = false
+      }
     })
 
     world.addBody(this.body) // Add body to the world
@@ -117,6 +127,7 @@ export class Frisbee extends Entity {
     this.otherHolding = false
     this.isFired = false
     recallSound.getComponent(AudioSource).playOnce()
+    catchHint.uiText.visible = false
 
     this.body.velocity.setZero()
     this.body.angularVelocity.setZero()
@@ -127,10 +138,20 @@ export class Frisbee extends Entity {
     //this.body.quaternion.setFromAxisAngle(new CANNON.Vec3(0, 0, 0), 0)
 
     if (pos.y > 1.5) {
-      ui.displayAnnouncement('Wow!')
+      ui.displayAnnouncement(
+        'Wow!',
+        5,
+        false,
+        Color4.FromHexString('#f2ff3bff')
+      )
       streakCounter.increase()
     } else if (!this.hitGround) {
-      ui.displayAnnouncement('Good catch!')
+      ui.displayAnnouncement(
+        'Good catch!',
+        5,
+        false,
+        Color4.FromHexString('#f2ff3bff')
+      )
       streakCounter.increase()
     } else {
       streakCounter.set(0)
@@ -155,15 +176,22 @@ export class Frisbee extends Entity {
     this.lastHolder = false
     this.otherHolding = true
     this.isFired = false
+    catchHint.uiText.visible = false
 
     this.body.velocity.setZero()
     this.body.angularVelocity.setZero()
     this.getComponent(GLTFShape).visible = false
 
     if (pos.y > 1.5) {
-      createFloatingText('Wow!', pos, 0.5, 2, Color3.Red())
+      createFloatingText('Wow!', pos, 0.5, 2, Color3.FromHexString('#f2ff3bff'))
     } else if (!this.hitGround) {
-      createFloatingText('Good Catch!', pos, 0.5, 2, Color3.Red())
+      createFloatingText(
+        'Good Catch!',
+        pos,
+        0.5,
+        2,
+        Color3.FromHexString('#f2ff3bff')
+      )
     } else {
       createFloatingText('Picked frisbee up', pos, 0.5, 2)
     }
@@ -174,6 +202,7 @@ export class Frisbee extends Entity {
     this.isFired = true
     this.hitGround = false
     engine.addSystem(new shootDiscSystem(this))
+    catchHint.uiText.visible = true
 
     shootSound.getComponent(AudioSource).playOnce()
     this.holding = false
@@ -209,6 +238,7 @@ export class Frisbee extends Entity {
     this.otherHolding = false
     this.isFired = true
     this.hitGround = false
+    catchHint.uiText.visible = true
     //shootSound.getComponent(AudioSource).playOnce()
 
     this.getComponent(GLTFShape).visible = true
@@ -217,10 +247,10 @@ export class Frisbee extends Entity {
     engine.addSystem(new shootDiscSystem(this))
 
     this.getComponent(Transform).position.copyFrom(pos)
-    this.getComponent(Transform).rotation.copyFrom(rot)
+    //this.getComponent(Transform).rotation.copyFrom(rot)
 
     this.body.position = new CANNON.Vec3(pos.x, pos.y, pos.z)
-    this.body.quaternion = new CANNON.Quaternion(rot.x, rot.y, rot.z, rot.w)
+    //this.body.quaternion = new CANNON.Quaternion(rot.x, rot.y, rot.z, rot.w)
 
     this.body.applyImpulse(
       new CANNON.Vec3(

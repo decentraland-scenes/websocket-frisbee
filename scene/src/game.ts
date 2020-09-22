@@ -9,6 +9,7 @@ import { addPhysicsConstraints } from './physicsConstraints'
 import { FloatingTextUpdate } from './floatingText'
 import { alteredUserName, dataType, joinSocketsServer } from './wsConnection'
 import { TriggerBoxShape } from '../node_modules/decentraland-ecs-utils/triggers/triggerSystem'
+import { SFHeavyFont } from '../node_modules/@dcl/ui-utils/utils/default-ui-comopnents'
 
 export let frisbee: Frisbee
 
@@ -38,14 +39,6 @@ async function setUpScene() {
   )
   world.addContactMaterial(groundContactMaterial)
 
-  frisbee = new Frisbee(
-    new Transform({ position: new Vector3(8, 0.49, 8) }),
-    world,
-    socket
-  )
-
-  addPhysicsConstraints(world, frisbee.body.material, 2, 2, true)
-
   // Create a ground plane
   const planeShape = new CANNON.Plane()
   const groundBody = new CANNON.Body({
@@ -56,6 +49,15 @@ async function setUpScene() {
   groundBody.quaternion.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), -Math.PI / 2) // Reorient ground plane to be in the y-axis
   groundBody.position.y = 0.17 // Thickness of ground base model
   world.addBody(groundBody)
+
+  frisbee = new Frisbee(
+    new Transform({ position: new Vector3(8, 0.49, 8) }),
+    world,
+    socket,
+    groundBody
+  )
+
+  addPhysicsConstraints(world, frisbee.body.material, 2, 2, true)
 
   const translocatorPhysicsContactMaterial = new CANNON.ContactMaterial(
     groundMaterial,
@@ -125,8 +127,32 @@ function distance(pos1: Vector3, pos2: Vector3): number {
 
 engine.addSystem(new FloatingTextUpdate())
 
-let streakLabel = new ui.CornerLabel('Streak', -80, 30, Color4.Red())
-export let streakCounter = new ui.UICounter(0, -10, 30, Color4.Red())
+let streakLabel = new ui.CornerLabel(
+  'STREAK',
+  -80,
+  30,
+  Color4.FromHexString('#34deebff'),
+  25
+)
+export let streakCounter = new ui.UICounter(
+  0,
+  -10,
+  30,
+  Color4.FromHexString('#34deebff'),
+  25
+)
+
+export let catchHint = new ui.CornerLabel(
+  'E to Catch',
+  50,
+  50,
+  Color4.FromHexString('#f2ff3bff'),
+  25
+)
+catchHint.uiText.hAlign = 'center'
+catchHint.uiText.font = SFHeavyFont
+catchHint.uiText.visible = false
+
 streakLabel.uiText.visible = false
 streakCounter.uiText.visible = false
 
@@ -157,6 +183,7 @@ uiArea.addComponent(
     () => {
       streakLabel.uiText.visible = false
       streakCounter.uiText.visible = false
+      catchHint.uiText.visible = false
     },
     false
   )
