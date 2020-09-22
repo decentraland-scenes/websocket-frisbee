@@ -5,7 +5,7 @@ import { alteredUserName, dataType } from './wsConnection'
 import { streakCounter } from './game'
 
 const X_OFFSET = 0
-const Y_OFFSET = 0.5
+const Y_OFFSET = -0.5
 const Z_OFFSET = 1
 
 const FIXED_TIME_STEPS = 1.0 / 60.0 // seconds
@@ -23,6 +23,7 @@ export class Frisbee extends Entity {
   holding: boolean = false
   otherHolding: boolean = false
   lastHolder: boolean = false
+  hitGround: boolean = false
   world: CANNON.World
   socket: WebSocket
   constructor(transform: Transform, world: CANNON.World, socket: WebSocket) {
@@ -73,6 +74,12 @@ export class Frisbee extends Entity {
     this.body.material = translocatorPhysicsMaterial // Add bouncy material to translocator body
     this.body.linearDamping = 0.4 // Round bodies will keep translating even with friction so you need linearDamping
     this.body.angularDamping = 0.4 // Round bodies will keep rotating even with friction so you need angularDamping
+
+    this.body.addEventListener('collide', (e) => {
+      log('Frisbee Collided')
+      this.hitGround = true
+    })
+
     world.addBody(this.body) // Add body to the world
   }
 
@@ -119,7 +126,10 @@ export class Frisbee extends Entity {
     this.body.position = new CANNON.Vec3(X_OFFSET, Y_OFFSET, Z_OFFSET)
     //this.body.quaternion.setFromAxisAngle(new CANNON.Vec3(0, 0, 0), 0)
 
-    if (pos.y > 0.5) {
+    if (pos.y > 1.5) {
+      ui.displayAnnouncement('Wow!')
+      streakCounter.increase()
+    } else if (!this.hitGround) {
       ui.displayAnnouncement('Good catch!')
       streakCounter.increase()
     } else {
@@ -138,8 +148,6 @@ export class Frisbee extends Entity {
       })
     )
 
-    // if y > 0 -> Show UI "Caught!"
-
     // maybe if currently moving / longer distance, more score
   }
   otherPickUp(user: string, pos: Vector3, streak: number) {
@@ -154,18 +162,17 @@ export class Frisbee extends Entity {
 
     if (pos.y > 1.5) {
       createFloatingText('Wow!', pos, 0.5, 2, Color3.Red())
-    } else if (pos.y > 0.5) {
+    } else if (!this.hitGround) {
       createFloatingText('Good Catch!', pos, 0.5, 2, Color3.Red())
     } else {
       createFloatingText('Picked frisbee up', pos, 0.5, 2)
     }
     streakCounter.set(streak)
-
-    // if y > 0 -> Show in-world UI "Caught!"
   }
   playerThrow(shootDirection: Vector3) {
     if (this.isFired || !this.holding) return
     this.isFired = true
+    this.hitGround = false
     engine.addSystem(new shootDiscSystem(this))
 
     shootSound.getComponent(AudioSource).playOnce()
@@ -201,6 +208,7 @@ export class Frisbee extends Entity {
     this.lastHolder = false
     this.otherHolding = false
     this.isFired = true
+    this.hitGround = false
     //shootSound.getComponent(AudioSource).playOnce()
 
     this.getComponent(GLTFShape).visible = true
