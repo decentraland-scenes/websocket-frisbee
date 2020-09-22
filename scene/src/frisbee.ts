@@ -5,7 +5,7 @@ import { alteredUserName, dataType } from './wsConnection'
 import { catchHint, streakCounter } from './game'
 
 const X_OFFSET = 0
-const Y_OFFSET = -0.5
+const Y_OFFSET = 0.5
 const Z_OFFSET = 1
 
 const FIXED_TIME_STEPS = 1.0 / 60.0 // seconds
