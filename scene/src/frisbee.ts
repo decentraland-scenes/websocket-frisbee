@@ -134,7 +134,7 @@ export class Frisbee extends Entity {
 
     this.body.velocity.setZero()
     this.body.angularVelocity.setZero()
-    this.setParent(Attachable.FIRST_PERSON_CAMERA)
+    this.setParent(Attachable.PLAYER)
     this.getComponent(Transform).position.set(X_OFFSET, Y_OFFSET, Z_OFFSET)
     this.getComponent(Transform).rotation = Quaternion.Zero()
     this.body.position = new CANNON.Vec3(X_OFFSET, Y_OFFSET, Z_OFFSET)
