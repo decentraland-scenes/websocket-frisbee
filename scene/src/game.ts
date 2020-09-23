@@ -51,13 +51,13 @@ async function setUpScene() {
   world.addBody(groundBody)
 
   frisbee = new Frisbee(
-    new Transform({ position: new Vector3(8, 0.49, 8) }),
+    new Transform({ position: new Vector3(24, 1, 24) }),
     world,
     socket,
     groundBody
   )
 
-  addPhysicsConstraints(world, frisbee.body.material, 2, 2, true)
+  addPhysicsConstraints(world, frisbee.body.material, 3, 3, true)
 
   const translocatorPhysicsContactMaterial = new CANNON.ContactMaterial(
     groundMaterial,
