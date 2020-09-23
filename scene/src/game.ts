@@ -12,13 +12,11 @@ import { TriggerBoxShape } from '../node_modules/decentraland-ecs-utils/triggers
 import { SFHeavyFont } from '../node_modules/@dcl/ui-utils/utils/default-ui-comopnents'
 
 export let frisbee: Frisbee
-
 export let sceneStarted = false
 
 // Create base scene
-const baseScene: Entity = new Entity()
+const baseScene = new Entity()
 baseScene.addComponent(new GLTFShape('models/hexBase.glb'))
-// baseScene.getComponent(GLTFShape).isPointerBlocker = false
 baseScene.addComponent(new Transform())
 engine.addEntity(baseScene)
 
