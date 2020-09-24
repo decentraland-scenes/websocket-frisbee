@@ -1,9 +1,10 @@
-# websocket-frisbee-throw
- A multiplayer scene that uses a websockets server to sync the position of a frisbee as it's thrown between players
+# Websocket Frisbee Throwing
 
-_demo of cannon-example-scene running in preview._
+A multiplayer scene that uses a websockets server to sync the position of a frisbee as it's thrown between players
 
-![demo](https://github.com/decentraland-scenes/cannon-example-scene/blob/master/screenshots/cannon.gif)
+_demo of frisbee throwing running in preview._
+
+![demo](screenshot/screeenshot.gif)
 
 ## Description
 
@@ -11,7 +12,7 @@ This scene uses WebSockets to sync what each player sees while throwing a futuri
 
 Since physics is calculated client side, sending messages for each change of position would be too much. Here, we're just sharing information about each throwing of the frisbee, and each client then calculates the effects of that locally.
 
-The last player to throw the frisbee is assigned as the source of truth, and syncs the position of the frisbee in the scene to others every few seconds. 
+The last player to throw the frisbee is assigned as the source of truth, and syncs the position of the frisbee in the scene to others every few seconds.
 
 This scene uses the default echo websockets server, which simply forwards all messages received to all other players in the room. A more robustly developed scene might implement server-side logic to dissambiguate confiting data better, or even run a parallel phyisics simulation and take that as the final source of truth. The benefit of this implementation is that it doesn't require changing the server-side code at all, but it has its limitations.
 
