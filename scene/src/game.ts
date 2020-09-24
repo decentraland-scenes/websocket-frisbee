@@ -157,14 +157,14 @@ streakCounter.uiText.visible = false
 let uiArea = new Entity()
 uiArea.addComponent(
   new Transform({
-    position: new Vector3(16, 0, 16),
+    position: new Vector3(24, 0, 24),
   })
 )
 engine.addEntity(uiArea)
 
 uiArea.addComponent(
   new utils.TriggerComponent(
-    new TriggerBoxShape(new Vector3(32, 32, 32), Vector3.Zero()),
+    new TriggerBoxShape(new Vector3(48, 32, 48), Vector3.Zero()),
     null,
     null,
     null,
