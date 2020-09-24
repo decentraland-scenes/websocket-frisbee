@@ -30,7 +30,7 @@ export class Frisbee extends Entity {
   holding: boolean = false
   otherHolding: boolean = false
   lastHolder: boolean = false
-  hitGround: boolean = false
+  hitGround: boolean = true
   world: CANNON.World
   socket: WebSocket
   ground: CANNON.Body
