@@ -4,7 +4,7 @@ A multiplayer scene that uses a websockets server to sync the position of a fris
 
 _demo of frisbee throwing running in preview._
 
-![demo](screenshot/screeenshot.gif)
+![demo](https://github.com/decentraland-scenes/websocket-frisbee/blob/master/screenshot/screeenshot.gif)
 
 ## Description
 
