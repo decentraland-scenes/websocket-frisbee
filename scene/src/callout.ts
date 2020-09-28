@@ -22,9 +22,11 @@ export class Callout extends Entity {
   }
   
   removeCallout(): void {
-    engine.removeEntity(this)
-    engine.removeSystem(calloutSystem)
+    this.getComponent(Transform).scale.setAll(0)
+  }
+  addCallout(): void {
+    this.getComponent(Transform).scale.setAll(1)
   }
 }
 
-export const calloutGroup = engine.getComponentGroup(CalloutFlag)
+const calloutGroup = engine.getComponentGroup(CalloutFlag)
