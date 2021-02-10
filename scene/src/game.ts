@@ -1,5 +1,5 @@
-import * as ui from '../node_modules/@dcl/ui-utils/index'
-import utils from '../node_modules/decentraland-ecs-utils/index'
+import * as ui from '@dcl/ui-scene-utils'
+import * as utils from '@dcl/ecs-scene-utils'
 /*
   IMPORTANT: The tsconfig.json has been configured to include "node_modules/cannon/build/cannon.js"
 */
@@ -8,8 +8,6 @@ import { Frisbee } from './frisbee'
 import { addPhysicsConstraints } from './physicsConstraints'
 import { FloatingTextUpdate } from './floatingText'
 import { alteredUserName, dataType, joinSocketsServer } from './wsConnection'
-import { TriggerBoxShape } from '../node_modules/decentraland-ecs-utils/triggers/triggerSystem'
-import { SFHeavyFont } from '../node_modules/@dcl/ui-utils/utils/default-ui-comopnents'
 
 export let frisbee: Frisbee
 export let sceneStarted = false
@@ -148,7 +146,7 @@ export let catchHint = new ui.CornerLabel(
   25
 )
 catchHint.uiText.hAlign = 'center'
-catchHint.uiText.font = SFHeavyFont
+catchHint.uiText.font = ui.SFHeavyFont
 catchHint.uiText.visible = false
 
 streakLabel.uiText.visible = false
@@ -164,25 +162,22 @@ engine.addEntity(uiArea)
 
 uiArea.addComponent(
   new utils.TriggerComponent(
-    new TriggerBoxShape(new Vector3(48, 32, 48), Vector3.Zero()),
-    null,
-    null,
-    null,
-    null,
-    () => {
-      if (!sceneStarted) {
-        setUpScene()
-        sceneStarted = true
-      }
+    new utils.TriggerBoxShape(new Vector3(48, 32, 48)),
+    {
+      onCameraEnter: () => {
+        if (!sceneStarted) {
+          setUpScene()
+          sceneStarted = true
+        }
 
-      streakLabel.uiText.visible = true
-      streakCounter.uiText.visible = true
-    },
-    () => {
-      streakLabel.uiText.visible = false
-      streakCounter.uiText.visible = false
-      catchHint.uiText.visible = false
-    },
-    false
+        streakLabel.uiText.visible = true
+        streakCounter.uiText.visible = true
+      },
+      onCameraExit: () => {
+        streakLabel.uiText.visible = false
+        streakCounter.uiText.visible = false
+        catchHint.uiText.visible = false
+      },
+    }
   )
 )

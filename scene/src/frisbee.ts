@@ -1,5 +1,5 @@
 import { Sound } from './sounds'
-import * as ui from '../node_modules/@dcl/ui-utils/index'
+import * as ui from '@dcl/ui-scene-utils'
 import { createFloatingText } from './floatingText'
 import { alteredUserName, dataType } from './wsConnection'
 import { catchHint, streakCounter } from './game'
@@ -147,18 +147,12 @@ export class Frisbee extends Entity {
     this.body.position = new CANNON.Vec3(X_OFFSET, Y_OFFSET, Z_OFFSET)
 
     if (pos.y > 1.5) {
-      ui.displayAnnouncement(
-        'Wow!',
-        5,
-        false,
-        Color4.FromHexString('#f2ff3bff')
-      )
+      ui.displayAnnouncement('Wow!', 5, Color4.FromHexString('#f2ff3bff'))
       streakCounter.increase()
     } else if (!this.hitGround) {
       ui.displayAnnouncement(
         'Good catch!',
         5,
-        false,
         Color4.FromHexString('#f2ff3bff')
       )
       streakCounter.increase()
