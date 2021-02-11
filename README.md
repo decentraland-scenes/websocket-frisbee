@@ -40,7 +40,13 @@ Any dependencies are installed and then the CLI opens the scene in a new browser
 
 By default, the scene relies on an already deployed server on that can be reached on `wss://64-225-45-232.nip.io/`
 
-To instead run the server locally, on a separate command line window, navigate to the `server` directory and run:
+To instead run the server locally, on a separate command line window, navigate to the `server` directory and run the following command to install all the dependencies:
+
+```
+npm i
+```
+
+Once the dependencies are installed, run the following command to start the server:
 
 ```
 npm run start
