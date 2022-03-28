@@ -1,9 +1,9 @@
-@Component("calloutFlag")
+@Component('calloutFlag')
 class CalloutFlag {}
 
 class calloutToUser implements ISystem {
   update() {
-    for (let entity of calloutGroup.entities) {
+    for (const entity of calloutGroup.entities) {
       entity.getComponent(Transform).lookAt(Camera.instance.position)
     }
   }
@@ -20,7 +20,7 @@ export class Callout extends Entity {
     this.addComponent(transform)
     calloutSystem = engine.addSystem(new calloutToUser())
   }
-  
+
   removeCallout(): void {
     this.getComponent(Transform).scale.setAll(0)
   }

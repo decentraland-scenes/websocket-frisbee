@@ -19,7 +19,7 @@ baseScene.addComponent(new Transform())
 engine.addEntity(baseScene)
 
 async function setUpScene() {
-  let socket = await joinSocketsServer()
+  const socket = await joinSocketsServer()
 
   // Setup our CANNON world
   const world = new CANNON.World()
@@ -38,7 +38,7 @@ async function setUpScene() {
   // Create a ground plane
   const planeShape = new CANNON.Plane()
   const groundBody = new CANNON.Body({
-    mass: 0, // mass == 0 makes the body static
+    mass: 0, // mass === 0 makes the body static
   })
   groundBody.addShape(planeShape)
   groundBody.material = groundMaterial
@@ -66,7 +66,7 @@ async function setUpScene() {
   world.addContactMaterial(translocatorPhysicsContactMaterial)
 
   Input.instance.subscribe('BUTTON_DOWN', ActionButton.POINTER, false, (e) => {
-    let shootDirection = Vector3.Forward().rotate(Camera.instance.rotation) // Camera's forward vector
+    const shootDirection = Vector3.Forward().rotate(Camera.instance.rotation) // Camera's forward vector
 
     frisbee.playerThrow(shootDirection)
 
@@ -91,7 +91,7 @@ async function setUpScene() {
       return
     }
 
-    let dist = distance(
+    const dist = distance(
       frisbee.getComponent(Transform).position,
       Camera.instance.position.clone()
     )
@@ -123,14 +123,14 @@ function distance(pos1: Vector3, pos2: Vector3): number {
 
 engine.addSystem(new FloatingTextUpdate())
 
-let streakLabel = new ui.CornerLabel(
+const streakLabel = new ui.CornerLabel(
   'STREAK',
   -80,
   30,
   Color4.FromHexString('#34deebff'),
   25
 )
-export let streakCounter = new ui.UICounter(
+export const streakCounter = new ui.UICounter(
   0,
   -10,
   30,
@@ -138,7 +138,7 @@ export let streakCounter = new ui.UICounter(
   25
 )
 
-export let catchHint = new ui.CornerLabel(
+export const catchHint = new ui.CornerLabel(
   'E to Catch',
   50,
   50,
@@ -152,7 +152,7 @@ catchHint.uiText.visible = false
 streakLabel.uiText.visible = false
 streakCounter.uiText.visible = false
 
-let uiArea = new Entity()
+const uiArea = new Entity()
 uiArea.addComponent(
   new Transform({
     position: new Vector3(24, 0, 24),
@@ -166,7 +166,7 @@ uiArea.addComponent(
     {
       onCameraEnter: () => {
         if (!sceneStarted) {
-          setUpScene()
+          setUpScene().catch((error) => log(error))
           sceneStarted = true
         }
 

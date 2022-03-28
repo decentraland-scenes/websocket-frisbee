@@ -78,7 +78,7 @@ export class Frisbee extends Entity {
         transform.position.y,
         transform.position.z
       ), // m
-      shape: new CANNON.Sphere(0.2), // m (Create sphere shaped body with a radius of 0.2)
+      shape: new CANNON.Sphere(0.2) // m (Create sphere shaped body with a radius of 0.2)
     })
     callout
       .getComponent(Transform)
@@ -97,7 +97,7 @@ export class Frisbee extends Entity {
     this.body.angularDamping = 0.4 // Round bodies will keep rotating even with friction so you need angularDamping
 
     this.body.addEventListener('collide', (e) => {
-      if (e.body == this.ground) {
+      if (e.body === this.ground) {
         log('Frisbee Collided w ground')
         this.hitGround = true
         catchHint.uiText.visible = false
@@ -167,8 +167,8 @@ export class Frisbee extends Entity {
           user: alteredUserName,
           pos: pos,
           streak: streakCounter.read(),
-          timeStamp: Date.now(),
-        },
+          timeStamp: Date.now()
+        }
       })
     )
 

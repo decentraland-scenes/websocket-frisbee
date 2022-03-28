@@ -1,4 +1,3 @@
-
 export function addPhysicsConstraints(
   world: CANNON.World,
   material: CANNON.Material,
@@ -10,7 +9,7 @@ export function addPhysicsConstraints(
     // Create a ground plane
     const planeShape = new CANNON.Plane()
     const groundBody = new CANNON.Body({
-      mass: 0, // mass == 0 makes the body static
+      mass: 0 // mass === 0 makes the body static
     })
     groundBody.addShape(planeShape)
     groundBody.quaternion.setFromAxisAngle(
@@ -35,7 +34,7 @@ export function addPhysicsConstraints(
   const wallNorth = new CANNON.Body({
     mass: 0,
     shape: wallShape,
-    position: new CANNON.Vec3((xParcels * 16) / 2, 25, yParcels * 16),
+    position: new CANNON.Vec3((xParcels * 16) / 2, 25, yParcels * 16)
   })
   wallNorth.material = wallMaterial
   world.addBody(wallNorth)
@@ -43,7 +42,7 @@ export function addPhysicsConstraints(
   const wallSouth = new CANNON.Body({
     mass: 0,
     shape: wallShape,
-    position: new CANNON.Vec3((xParcels * 16) / 2, 25, 0),
+    position: new CANNON.Vec3((xParcels * 16) / 2, 25, 0)
   })
   wallSouth.material = wallMaterial
   world.addBody(wallSouth)
@@ -51,9 +50,9 @@ export function addPhysicsConstraints(
   const wallEast = new CANNON.Body({
     mass: 0,
     shape: wallShape,
-    position: new CANNON.Vec3(0, 25, (yParcels * 16) / 2),
+    position: new CANNON.Vec3(0, 25, (yParcels * 16) / 2)
   })
-  
+
   wallEast.quaternion.setFromAxisAngle(new CANNON.Vec3(0, 1, 0), -Math.PI / 2)
   wallEast.material = wallMaterial
   world.addBody(wallEast)
@@ -61,7 +60,7 @@ export function addPhysicsConstraints(
   const wallWest = new CANNON.Body({
     mass: 0,
     shape: wallShape,
-    position: new CANNON.Vec3(xParcels * 16, 25, (yParcels * 16) / 2),
+    position: new CANNON.Vec3(xParcels * 16, 25, (yParcels * 16) / 2)
   })
   wallWest.quaternion.setFromAxisAngle(new CANNON.Vec3(0, 1, 0), -Math.PI / 2)
   wallWest.material = wallMaterial
